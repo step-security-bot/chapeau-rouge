@@ -17,8 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'vdemeester'
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
       - name: ${{ matrix.project }}
-        uses: git-for-windows/rss-to-issues@v0
+        uses: git-for-windows/rss-to-issues@44ef58301d5c8257c00e3ae0a233d9659a5e0f4f # v0.0.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           feed: https://github.com/${{ matrix.project }}/releases.atom

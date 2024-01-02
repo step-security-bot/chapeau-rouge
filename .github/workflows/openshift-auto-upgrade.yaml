@@ -4,15 +4,25 @@ on:
   schedule:
     - cron: '0 1 * * 0' # runs weekly on Sunday at 00:00
 
+permissions:
+  contents: read
+
 jobs:
   refresh-packages:
+    permissions:
+      contents: write  # for Git to git push
     runs-on: ubuntu-latest
     if: github.repository_owner == 'vdemeester'
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          egress-policy: audit
+
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Install Nix
-        uses: cachix/install-nix-action@v24
+        uses: cachix/install-nix-action@7ac1ec25491415c381d9b62f0657c7a028df52a7 # v24
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
